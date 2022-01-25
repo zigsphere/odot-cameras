@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>ODOT Traffic Cameras</title>
+    <style>
+      .box {
+        display: flex;
+        flex-flow: row wrap;
+        margin: auto;
+        padding: 10px;
+      }
+    </style>
+  </head>
+<body>
+  <div class="box">
+  {% for url in urls %}
+    {% for u in url %}
+      <div><img src="{{u["cctv-url"]}}" alt="{{u["cctv-other"]}}"/></div>
+      {% endfor %}
+  {% endfor %}
+</body>
+</html>
