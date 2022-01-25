@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>ODOT Traffic Cameras</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div class="box">
+      {% for city,cameras in urls.items() %}
+      <h1>{{ city }}</h1>
+        {% for camera in cameras %}
+          <div><img src="{{camera["cctv-url"]}}" alt="{{camera["cctv-other"]}}"/></div>
+        {% endfor %}
+      {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>

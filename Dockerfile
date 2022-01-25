@@ -8,11 +8,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY . .
-COPY uwsgi.ini /etc/uwsgi/
-COPY supervisord.conf /etc/
+
+COPY ./requirements.txt ./
 RUN pip install --upgrade pip && \
     pip3 install -r requirements.txt
 
-CMD ["/usr/bin/supervisord"]
+COPY . .
+COPY uwsgi.ini /etc/uwsgi/
+COPY supervisord.conf /etc/
 
+CMD ["/usr/bin/supervisord"]
