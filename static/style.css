@@ -1,38 +1,59 @@
 .box {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    margin: auto;
-    padding: 10px;
-  }
-  h1 {
-    width: 100%;
-  }
-  #wrapper {
-    width: 80%;
-    margin: 0 auto;
-    background-color: #BEDEAF;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F9FCF7), to(#BEDEAF));
-    background: -moz-linear-gradient(top, #F9FCF7 0%, #BEDEAF 100%);
-    border: 2px solid #333;
-    /* curved border radius */
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  body {
-    line-height: 1;
-    /*background: black;*/
-    background-image:url("/static/green_cup.png");
-    background-repeat:repeat;
-    /*color: #555;*/
-    font-family: 'Trebuchet MS', Verdana, Arial, Helvetica, sans-serif;
-    font-size: 14px;
-  }
-  img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin: auto;
+  padding: 10px;
+  background-color: #2A2B2A;
+}
+.box ul {
+  flex-flow: unset;
+  justify-content: left;
+  width: 90%;
+}
+.incidents {
+  width: 70%;
+}
+ul, h3 {
+  width: 90%;
+  color: white;
+}
+h1 {
+  width: 100%;
+  color: white;
+}
+p {
+  text-align: right;
+}
+hr, p {
+  width: 97%;
+  color: white;
+}
+#wrapper {
+  width: 80%;
+  margin: 0 auto;
+  background-color: #BEDEAF;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F9FCF7), to(#BEDEAF));
+  background: -moz-linear-gradient(top, #F9FCF7 0%, #BEDEAF 100%);
+  border: 2px solid #333;
+  /* curved border radius */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+body {
+  line-height: 1;
+  /*background: black;*/
+  background-image:url("/static/green_cup.png");
+  background-repeat:repeat;
+  /*color: #555;*/
+  font-family: 'Trebuchet MS', Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

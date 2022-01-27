@@ -7,11 +7,35 @@
     <div id="wrapper">
       <div class="box">
       {% for city,cameras in urls.items() %}
-      <h1>{{ city }}</h1>
+      <h1><u>{{ city }}</u></h1>
+      <h3>Incidents for {{city}}</h3>
+        {% for incident_city,incident in incidents.items() %}
+          {% if incident_city == city %}
+            {% if incident %}
+              {% for i in incident %}
+                <ul>
+                  <li><b>{{ i["headline"] }}</b></li>
+                    <ul>
+                      <li>Comments: {{ i["comments"] if i["comments"] else 'N/A' }}</li>
+                      <li>Highway: {{i["location"]["route-id"]}}</li>
+                      <li>Milepost: {{i["location"]["start-location"]["start-milepost"]}} to {{ i["location"]["end-location"]["end-milepost"] if i["location"]["end-location"]["end-milepost"] else 'N/A' }}</li>
+                    </ul>
+                </ul>
+              {% endfor %}
+            {% else %}
+            <ul>
+              <li><b>None at this time</b></li>
+            </ul>
+            {% endif %} 
+          {% endif %}
+        {% endfor %}
         {% for camera in cameras %}
           <div><img src="{{camera["cctv-url"]}}" alt="{{camera["cctv-other"]}}"/></div>
         {% endfor %}
+        <hr />
       {% endfor %}
+      <p>ZigSphere</p>
+      <p>Information provided by the Oregon Department of Transporation</p>
       </div>
     </div>
   </body>
