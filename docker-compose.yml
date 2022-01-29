@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  odot:
+    build: .
+    restart: on-failure
+    networks:
+      - odot-net
+    environment:
+      - API_KEY=XXXXXXXXXXXXXXXX
+  web:
+    image: nginx
+    restart: on-failure
+    depends_on: 
+      - odot
+    networks:
+      - odot-net
+    ports:
+      - 80:80/tcp
+    volumes:
+      - ./nginx-files/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx-files/nginx.conf:/etc/nginx/nginx.conf
+
+networks:
+  odot-net:

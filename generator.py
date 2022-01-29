@@ -21,7 +21,7 @@ def homepage():
   payload={}
   headers = {
     'Cache-Control': 'no-cache',
-    'Ocp-Apim-Subscription-Key': f"APIKEY"
+    'Ocp-Apim-Subscription-Key': APIKEY
   }
 
   image_urls = {
@@ -34,7 +34,7 @@ def homepage():
     for city, coord in regions.items()
   }
 
-  print(incidents)
+  #print(incidents) To debug
   return render_template('index.html', urls=image_urls, incidents=incidents)
 
 if __name__ == '__main__':
