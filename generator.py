@@ -35,9 +35,8 @@ def homepage():
   #print(incidents) To debug
   return render_template('index.html', urls=image_urls, incidents=incidents)
 
-@cache.cached(timeout=DATA_CACHE_TIMEOUT)
+@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
-  payload={}
   headers = {
     'Cache-Control': 'no-cache',
     'Ocp-Apim-Subscription-Key': APIKEY
