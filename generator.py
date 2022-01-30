@@ -6,6 +6,8 @@ from flask import Flask, render_template, url_for, jsonify, request
 from flask_caching import Cache
 
 APIKEY = os.getenv('API_KEY') # Use as environment in compose file
+HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
+DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
 
 app = Flask(__name__, template_folder='./templates')
 
@@ -27,9 +29,14 @@ regions = {
 }
 
 @app.route('/')
-@cache.cached(timeout=30)
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
 def homepage():
-  payload={}
+  image_urls, incidents = get_data()
+  #print(incidents) To debug
+  return render_template('index.html', urls=image_urls, incidents=incidents)
+
+@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
+def get_data():
   headers = {
     'Cache-Control': 'no-cache',
     'Ocp-Apim-Subscription-Key': APIKEY
@@ -45,8 +52,7 @@ def homepage():
     for city, coord in regions.items()
   }
 
-  #print(incidents) To debug
-  return render_template('index.html', urls=image_urls, incidents=incidents)
+  return image_urls, incidents
 
 @app.route("/ping/")
 def ping():

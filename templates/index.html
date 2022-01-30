@@ -1,42 +1,50 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <title>ODOT Traffic Cameras</title>
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
   </head>
   <body>
-    <div id="wrapper">
-      <div class="box">
+    <main>
+      <h1>Traffic Cameras</h1>
       {% for city,cameras in urls.items() %}
-      <h1><u>{{ city }}</u></h1>
-      <h3>Incidents for {{city}}</h3>
+      <section class="city">
+      <h2>{{ city }}</h2>
         {% for incident_city,incident in incidents.items() %}
           {% if incident_city == city %}
             {% if incident %}
+            <ul class="incidents">
               {% for i in incident %}
-                <ul>
-                  <li><b>{{ i["headline"] }}</b></li>
-                    <ul>
-                      <li>Comments: {{ i["comments"] if i["comments"] else 'N/A' }}</li>
-                      <li>Highway: {{i["location"]["route-id"]}}</li>
-                      <li>Milepost: {{i["location"]["start-location"]["start-milepost"]}} to {{ i["location"]["end-location"]["end-milepost"] if i["location"]["end-location"]["end-milepost"] else 'N/A' }}</li>
-                    </ul>
-                </ul>
+                <li class="incidents__incident">
+                    <p class="incidents__headline">{{ i["headline"] }}</p>
+                    {% if i["comments"] -%}
+                    <p class="incidents__comments">{{ i["comments"] }}</p>
+                    {%- endif %}
+                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
+                </li>
               {% endfor %}
-            {% else %}
-            <ul>
-              <li><b>None at this time</b></li>
             </ul>
+            {% else %}
+              <p class="incidents__empty">No incidents at this time.</p>
             {% endif %} 
           {% endif %}
         {% endfor %}
+        <ul class="cameras">
         {% for camera in cameras %}
-          <div><img src="{{camera["cctv-url"]}}" alt="{{camera["cctv-other"]}}"/></div>
+            <li class="cameras__item"><figure class="cameras__figure">
+                <img class="cameras__image" src="{{camera["cctv-url"]}}" alt="" loading="lazy" width="328" height="295" />
+                <figcaption class="cameras__caption">{{ camera["cctv-other"]}}</figcaption>
+            </figure></li>
         {% endfor %}
-        <hr />
+        </ul>
+      </section>
       {% endfor %}
+      <footer>
       <p>ZigSphere</p>
       <p>Information provided by the Oregon Department of Transportation API</p>
-      </div>
-    </div>
+      </footer>
+    </main>
   </body>
 </html>
