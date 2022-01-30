@@ -3,15 +3,15 @@
   <head>
     <title>ODOT Traffic Cameras</title>
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
   </head>
   <body>
     <main>
       <h1>Traffic Cameras</h1>
-      <section class="city">
       {% for city,cameras in urls.items() %}
+      <section class="city">
       <h2>{{ city }}</h2>
-      <h3>Incidents for {{city}}</h3>
         {% for incident_city,incident in incidents.items() %}
           {% if incident_city == city %}
             {% if incident %}
@@ -22,16 +22,15 @@
                     {% if i["comments"] -%}
                     <p class="incidents__comments">{{ i["comments"] }}</p>
                     {%- endif %}
-                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"]}}</span>, mileposts <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}} to {{ i["location"]["end-location"]["end-milepost"] if i["location"]["end-location"]["end-milepost"] else 'N/A' }}</span></p>
+                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"]}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
                 </li>
               {% endfor %}
             </ul>
             {% else %}
-              <p class="no-incidents">None at this time</p>
+              <p class="incidents__empty">No incidents at this time.</p>
             {% endif %} 
           {% endif %}
         {% endfor %}
-      <h3>Cameras for {{city}}</h3>
         <ul class="cameras">
         {% for camera in cameras %}
             <li class="cameras__item"><figure class="cameras__figure">
@@ -40,8 +39,8 @@
             </figure></li>
         {% endfor %}
         </ul>
-      {% endfor %}
       </section>
+      {% endfor %}
       <footer>
       <p>ZigSphere</p>
       <p>Information provided by the Oregon Department of Transportation API</p>

@@ -3,62 +3,125 @@
   margin: 0;
   box-sizing: border-box;
 }
-.box {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  margin: auto;
-  padding: 10px;
-  background-color: #2A2B2A;
+:root {
+  --spacing: 0.75rem;
+  --image-width: 328px;
 }
-.box ul {
-  flex-flow: unset;
-  justify-content: left;
-  width: 90%;
+img, figure {
+  max-width: 100%;
 }
-.incidents {
-  width: 70%;
-}
-ul, h3 {
-  width: 90%;
+body {
+  line-height: 1.4;
   color: white;
 }
-h1 {
-  width: 100%;
-  color: white;
-}
-p {
-  text-align: right;
-}
-hr, p {
-  width: 97%;
-  color: white;
-}
-#wrapper {
-  width: 80%;
+main {
+  --padding: calc(var(--spacing) * 4);
+  width: 80%; /* TODO set max width based on font size */
   margin: 0 auto;
-  background-color: #BEDEAF;
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F9FCF7), to(#BEDEAF));
-  background: -moz-linear-gradient(top, #F9FCF7 0%, #BEDEAF 100%);
+  background-color: #2A2B2A;
   border: 2px solid #333;
   /* curved border radius */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding: var(--padding);
+  margin: calc(var(--spacing) * 2) auto;
+}
+h1 {
+  margin: 0;
+  font-size: 3rem;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+h2 {
+  margin: calc(var(--spacing) * 6) 0 0;
+  font-size: 2rem;
+  /* TODO the white of the text disappears on top of photos */
+  position: sticky;
+  top: calc(1 * var(--spacing));
+}
+h1 + .city > h2 {
+  margin-top: calc(var(--spacing) * 3);
+}
+h3 {
+  margin: calc(var(--spacing) * 6) 0 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+h2 + h3 {
+  margin-top: calc(var(--spacing) * 3);
+}
+.incidents {
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+  justify-content: space-between;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+.incidents__incident {
+  --gap: calc(var(--spacing) * 1);
+  width: calc(100% / 2 - 1 * var(--gap));
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  border-left: 0.25em solid;
+  padding: var(--spacing) calc(2 * var(--spacing));
+  margin-top: calc(var(--spacing) * 2);
+}
+.incidents__incident:nth-child(n + 3) {
+  margin-top: calc(var(--spacing) * 4);
+}
+.incidents__headline, .incidents__comments {
+  margin-bottom: calc(var(--spacing) * 2);
+}
+.incidents__headline {
+  font-size: 1.25em;
+}
+.incidents__metadata {
+  font-size: 1.1em;
+}
+.incidents__headline, .incidents__metadata {
+  font-weight: 600;
+}
+.incidents__highway {
+}
+.incidents__mileposts {
+}
+.incidents__empty {
+  font-size: 1.2em;
+  margin-top: calc(2 * var(--spacing));
+}
+.cameras {
+  /* using Grid to avoid layout problems with the last line, but if that’s not an issue, Flexbox will do the job */
+  display: grid;
+  grid-template-columns: repeat(4, calc(25% - var(--spacing) * 2));
+  grid-gap: calc(var(--spacing) * 2);
+  margin: calc(4 * var(--spacing)) auto 0;
+  list-style: none;
+  justify-content: space-between;
+}
+.cameras__item {
+}
+.cameras__figure {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  height: 100%;
+}
+.cameras__caption {
+  text-align: center;
+  margin-top: var(--spacing);
+}
+.cameras__image {
+  height: auto;
 }
 body {
-  line-height: 1;
-  /*background: black;*/
   background-image:url("/static/green_cup.png");
   background-repeat:repeat;
-  /*color: #555;*/
-  font-family: 'Trebuchet MS', Verdana, Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 90%;
 }
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+footer {
+  margin-top: calc(4 * var(--spacing));
+  text-align: right;
 }
