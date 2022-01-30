@@ -22,7 +22,7 @@
                     {% if i["comments"] -%}
                     <p class="incidents__comments">{{ i["comments"] }}</p>
                     {%- endif %}
-                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"]}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
+                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
                 </li>
               {% endfor %}
             </ul>
