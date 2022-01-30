@@ -23,8 +23,12 @@ docker-compose up -d
 
 For development, in the docker-compose.yml file, comment out the image attribute and uncomment the `build: .`. Then you can simply run `docker-compose up --build` to build the image from the included Dockerfile.
 
-### Planned features
+### Used APIs
+A list of the data that can be retreived is listed [here](https://tripcheck.com/Pages/API); however, currently the [CCTV inventory](https://apiportal.odot.state.or.us/api-details#api=tripcheck-api-v1-0;rev=1&operation=Cls_GetClsInventory) and [incidents](https://apiportal.odot.state.or.us/api-details#api=tripcheck-api-v1-0;rev=1&operation=Inc_GetIncidentsFilter) API are the only two used in this application.
+
+### Planned Features
  - Better web frontend
  - Multi-page site for other cities with more information
+ - Better error handling
  
 ![road](https://github.com/zigsphere/odot-cameras/blob/main/static/road.png?raw=true)
