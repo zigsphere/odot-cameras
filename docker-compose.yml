@@ -1,7 +1,8 @@
 version: '3.8'
 services:
   odot:
-    build: .
+    image: ghcr.io/zigsphere/odot-cameras:main
+    #build: .
     restart: on-failure
     networks:
       - odot-net
