@@ -1,13 +1,11 @@
 # ODOT Cameras
 Using the Oregon Department of Transportation (ODOT) CCTV API to generate a site with cameras.
 
-[![Build Status][build_image]][build_page]
+[![Build Status][build_image]][build_page] [![Lint Status][b_image]][b_page]
 
 [build_image]: https://github.com/zigsphere/odot-cameras/actions/workflows/docker-publish.yml/badge.svg
 [build_page]: https://github.com/zigsphere/odot-cameras/actions
 
-
-[![Lint Status][b_image]][b_page]
 
 [b_image]: https://github.com/zigsphere/odot-cameras/actions/workflows/python-app.yml/badge.svg
 [b_page]: https://github.com/zigsphere/odot-cameras/actions
