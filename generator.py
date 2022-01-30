@@ -2,11 +2,21 @@ import json
 import os
 from urllib.parse import quote
 import requests
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, jsonify, request
+from flask_caching import Cache
 
 APIKEY = os.getenv('API_KEY') # Use as environment in compose file
 
 app = Flask(__name__, template_folder='./templates')
+
+config = {
+    "DEBUG": True,          # some Flask specific configs
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 180
+}
+
+app.config.from_mapping(config)
+cache = Cache(app)
 
 regions = {
   'Roseburg': '-123.813436,42.798917,-123.143353,43.447403',
@@ -17,6 +27,7 @@ regions = {
 }
 
 @app.route('/')
+@cache.cached(timeout=30)
 def homepage():
   payload={}
   headers = {
@@ -36,6 +47,10 @@ def homepage():
 
   #print(incidents) To debug
   return render_template('index.html', urls=image_urls, incidents=incidents)
+
+@app.route("/ping/")
+def ping():
+  return "PONG"
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
