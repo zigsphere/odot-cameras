@@ -34,9 +34,9 @@
       <h3>Cameras for {{city}}</h3>
         <ul class="cameras">
         {% for camera in cameras %}
-            <li><figure>
-                <img src="{{camera["cctv-url"]}}" alt="" loading="lazy" />
-                <figcaption>{{ camera["cctv-other"]}}</figcaption>
+            <li class="cameras__item"><figure class="cameras__figure">
+                <img class="cameras__image" src="{{camera["cctv-url"]}}" alt="" loading="lazy" width="328" height="295" />
+                <figcaption class="cameras__caption">{{ camera["cctv-other"]}}</figcaption>
             </figure></li>
         {% endfor %}
         </ul>
