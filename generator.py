@@ -2,7 +2,7 @@ import json
 import os
 from urllib.parse import quote
 import requests
-from flask import Flask, render_template, url_for, jsonify, request
+from flask import Flask, render_template, url_for
 from flask_caching import Cache
 
 APIKEY = os.getenv('API_KEY') # Use as environment in compose file
