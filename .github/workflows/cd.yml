@@ -14,4 +14,5 @@ jobs:
         key: ${{ secrets.KEY }}
         host: ${{ secrets.HOST }}
         port: ${{ secrets.PORT }}
+        username: ${{ secrets.USERNAME }}
         script: docker-compose down && docker-compose pull && docker-compose up -d
