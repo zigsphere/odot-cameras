@@ -2,3 +2,4 @@ Flask
 requests
 uwsgi
 Flask-Caching
+redis
