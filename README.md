@@ -26,6 +26,9 @@ docker-compose up -d
 
 For development, in the docker-compose.yml file, comment out the image attribute and uncomment the `build: .`. Then you can simply run `docker-compose up --build` to build the image from the included Dockerfile.
 
+### Caching
+The application is currently using Redis to store the cache for the retrieved data from the ODOT API. This is done by using the Flask-Caching Python library. A cache is used to avoid hitting the API rate limit from each load of the page. Instead, the cache is stored for the time specified for HOMEPAGE_CACHE_TIMEOUT and DATA_CACHE_TIMEOUT. These can be set as environment variables for the ODOT container image within the docker-compose file. Now, when the page is loaded by several concurrent connections, the data is pulled from the Redis cache rather than performing an API call each time. You can change the cache type if desired. https://flask-caching.readthedocs.io/ 
+
 ### Used APIs
 A list of the data that can be retreived is listed [here](https://tripcheck.com/Pages/API); however, currently the [CCTV inventory](https://apiportal.odot.state.or.us/api-details#api=tripcheck-api-v1-0;rev=1&operation=Cls_GetClsInventory) and [incidents](https://apiportal.odot.state.or.us/api-details#api=tripcheck-api-v1-0;rev=1&operation=Inc_GetIncidentsFilter) API are the only two used in this application.
 
