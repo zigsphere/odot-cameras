@@ -1,4 +1,4 @@
-# ODOT Cameras
+# ODOT Road Conditions
 Using the Oregon Department of Transportation (ODOT) CCTV API to generate a site with cameras.
 
 [![Build Status][build_image]][build_page] [![Lint Status][b_image]][b_page] [![CodeQL][ca_image]][ca_page]
