@@ -1,5 +1,7 @@
 import json
 import os
+from dateutil import parser
+from datetime import datetime
 from urllib.parse import quote
 import requests
 from flask import Flask, render_template, url_for
@@ -57,6 +59,14 @@ def get_data():
   }
 
   return image_urls, incidents
+
+@app.context_processor
+def utility_processor():
+    def format_time(isotime):
+        dt = parser.parse(isotime)
+        formatted_time = dt.strftime("%m/%d/%Y %H:%M")
+        return formatted_time
+    return dict(format_time=format_time)
 
 @app.route("/ping/")
 def ping():

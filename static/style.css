@@ -70,7 +70,7 @@ h2 + h3 {
 .incidents__incident:nth-child(n + 3) {
   margin-top: calc(var(--spacing) * 4);
 }
-.incidents__headline, .incidents__comments {
+.incidents__headline, .incidents__comments, .incidents__desc, .incidents__update, .incidents__create {
   margin-bottom: calc(var(--spacing) * 2);
 }
 .incidents__headline {

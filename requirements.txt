@@ -3,3 +3,4 @@ requests
 uwsgi
 Flask-Caching
 redis
+python-dateutil
