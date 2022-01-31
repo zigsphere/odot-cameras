@@ -33,5 +33,6 @@ A list of the data that can be retreived is listed [here](https://tripcheck.com/
  - Better web frontend
  - Multi-page site for other cities with more information
  - Better error handling
+ - Use Redis for cache management (Currently using python dictionaries aka SimpleCache)
  
 ![road](https://github.com/zigsphere/odot-cameras/blob/main/static/road.png?raw=true)
