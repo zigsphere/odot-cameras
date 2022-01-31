@@ -20,10 +20,10 @@
                 <li class="incidents__incident">
                     <p class="incidents__headline">{{ i["headline"] }}</p>
                     {% if i["create-time"] -%}
-                    <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} UTC</p>
+                    <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
                     {%- endif %}
                     {% if i["update-time"] -%}
-                    <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} UTC</p>
+                    <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} US/Pacific</p>
                     {%- endif %}
                     {% if i["impact-desc"] -%}
                     <p class="incidents__desc">{{ i["impact-desc"] }}</p>
