@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ODOT Traffic Cameras</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}" type="image/x-icon" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  </head>
+  <body>
+    <main>
+        {% block content %}
+        <h1>500 Internal Server Error</h1>
+        <p>OOPS! Something went wrong on the server.</p>
+        <p>We are currently working on this issue. Please try again later.</p>
+        {% endblock %}
+      <footer>
+      <p>ZigSphere</p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -4,7 +4,7 @@ from dateutil import parser
 from datetime import datetime
 from urllib.parse import quote
 import requests
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, abort
 from flask_caching import Cache
 
 APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
@@ -15,8 +15,8 @@ DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
 app = Flask(__name__, template_folder='./templates')
 
 config = {
-    "DEBUG": True,                # some Flask specific configs
-    "CACHE_TYPE": "RedisCache",   # Flask-Caching related configs
+    "DEBUG": True,
+    "CACHE_TYPE": "RedisCache",
     "CACHE_DEFAULT_TIMEOUT": 180,
     "CACHE_REDIS_HOST": "redis",
     "CACHE_REDIS_PORT": 6379,
@@ -29,16 +29,18 @@ cache = Cache(app)
 regions = {
   'Roseburg': '-123.813436,42.798917,-123.143353,43.447403',
   'Klamath Falls': '-122.553828,42.140986,-121.602086,42.457756',
-  'Portland': '-122.875228,45.414915,-122.631469,45.559331',
+  'Ashland / Siskiyou': '-122.819803,42.009244,-122.520011,42.320272',
+  'Medford / Central Point': '-123.006094,42.179417,-122.776114,42.508094',
   'Eugene': '-123.235,43.946472,-122.792656,44.226514',
-  'Ashland': '-122.819803,42.009244,-122.520011,42.320272'
+  'Salem / Surrounding Area': '-123.153519,44.819314,-122.649742,45.284286',
+  'Portland': '-122.846803,45.312897,-122.378803,45.568083'
 }
 
 @app.route('/')
 @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
 def homepage():
   image_urls, incidents = get_data()
-  #print(incidents) To debug
+  #print(incidents) # For debugging
   return render_template('index.html', urls=image_urls, incidents=incidents)
 
 @cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
@@ -47,16 +49,18 @@ def get_data():
     'Cache-Control': 'no-cache',
     'Ocp-Apim-Subscription-Key': APIKEY
   }
+  try:
+    image_urls = {
+      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Cctv/Inventory?Bounds={quote(coord)}', headers=headers).json()['CCTVInventoryRequest']
+      for city, coord in regions.items()
+    }
 
-  image_urls = {
-    city: requests.get(f'https://api.odot.state.or.us/tripcheck/Cctv/Inventory?Bounds={quote(coord)}', headers=headers).json()['CCTVInventoryRequest']
-    for city, coord in regions.items()
-  }
-
-  incidents = {
-    city: requests.get(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers=headers).json()['incidents']
-    for city, coord in regions.items()
-  }
+    incidents = {
+      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers=headers).json()['incidents']
+      for city, coord in regions.items()
+    }
+  except requests.exceptions.RequestException:
+    abort(500)
 
   return image_urls, incidents
 
@@ -71,6 +75,10 @@ def utility_processor():
 @app.route("/ping/")
 def ping():
   return "PONG"
+
+@app.errorhandler(500)
+def page_exception(error):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
