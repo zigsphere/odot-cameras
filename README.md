@@ -37,5 +37,7 @@ A list of the data that can be retreived is listed [here](https://tripcheck.com/
 - [ ] Mult-page site for other cities with more information
 - [ ] Better error handling
 - [x] Use Redis for cache management (Currently using python dictionaries aka SimpleCache)
+- [ ] Add local event information for each city
+- [ ] Add road & weather information for each city
  
 ![road](https://github.com/zigsphere/odot-cameras/blob/main/static/road.png?raw=true)
