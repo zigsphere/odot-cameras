@@ -78,7 +78,7 @@ def get_events():
   }
   try:
     events = {
-      city: get_json(f'https://api.odot.state.or.us/tripcheck/Tle/Events?Bounds{quote(coord)}', headers)['Incidents']
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Tle/Events?Bounds={quote(coord)}', headers)['Incidents']
       for city, coord in regions.items()
     }
 
