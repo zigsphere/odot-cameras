@@ -41,6 +41,21 @@
             {% endif %} 
           {% endif %}
         {% endfor %}
+        {% for event_city,event in events.items() %}
+          {% if event_city == city %}
+            {% if event %}
+            <ul class="incidents">
+              {% for j in event %}
+                <li class="incidents__incident">
+                    <p class="incidents__headline">{{ j["Headline"] }}</p>
+                </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+              <p class="incidents__empty">No incidents at this time.</p>
+            {% endif %} 
+          {% endif %}
+        {% endfor %}
         <ul class="cameras">
         {% for camera in cameras %}
             <li class="cameras__item"><figure class="cameras__figure">

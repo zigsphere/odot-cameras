@@ -1,13 +1,14 @@
 version: '3.8'
 services:
   odot:
-    image: ghcr.io/zigsphere/odot-cameras:main
-    #build: .
+    #image: ghcr.io/zigsphere/odot-cameras:main
+    build: .
     restart: on-failure
     networks:
       - odot-net
     environment:
-      - API_KEY=XXXXXXXXXXXXXXXX
+      - API_KEY=XXXXXXXXXXXXX
+      - APIKEY_DEV2=XXXXXXXXXXXXX
       - REDIS_PASSWORD=password
     depends_on:
       - redis

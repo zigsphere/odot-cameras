@@ -8,6 +8,7 @@ from flask import Flask, render_template, url_for, abort
 from flask_caching import Cache
 
 APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
+APIKEY_DEV2 = os.getenv('APIKEY_DEV2')
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') # Use as environment in compose file
 HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
 DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
@@ -40,8 +41,9 @@ regions = {
 @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
 def homepage():
   image_urls, incidents = get_data()
+  events = get_events()
   #print(incidents) # For debugging
-  return render_template('index.html', urls=image_urls, incidents=incidents)
+  return render_template('index.html', urls=image_urls, incidents=incidents, events=events)
 
 @cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
@@ -63,6 +65,23 @@ def get_data():
     abort(500)
 
   return image_urls, incidents
+
+@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='events')
+def get_events():
+  headers = {
+    'Cache-Control': 'no-cache',
+    'Ocp-Apim-Subscription-Key': APIKEY_DEV2
+  }
+  try:
+    events = {
+      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Tle/Events?Bounds{quote(coord)}', headers=headers).json()['Incidents']
+      for city, coord in regions.items()
+    }
+
+  except requests.exceptions.RequestException:
+    abort(500)
+
+  return events
 
 @app.context_processor
 def utility_processor():
