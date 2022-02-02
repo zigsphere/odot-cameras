@@ -6,20 +6,24 @@ from urllib.parse import quote
 import requests
 from flask import Flask, render_template, url_for, abort
 from flask_caching import Cache
+from dotenv import load_dotenv
+
+load_dotenv('.env')
+
+app = Flask(__name__, template_folder='./templates')
 
 APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
 APIKEY_DEV2 = os.getenv('APIKEY_DEV2')
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') # Use as environment in compose file
+REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
 HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
 DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
-
-app = Flask(__name__, template_folder='./templates')
 
 config = {
     "DEBUG": True,
     "CACHE_TYPE": "RedisCache",
     "CACHE_DEFAULT_TIMEOUT": 180,
-    "CACHE_REDIS_HOST": "redis",
+    "CACHE_REDIS_HOST": REDIS_HOST,
     "CACHE_REDIS_PORT": 6379,
     "CACHE_REDIS_PASSWORD": REDIS_PASSWORD
 }
@@ -53,12 +57,12 @@ def get_data():
   }
   try:
     image_urls = {
-      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Cctv/Inventory?Bounds={quote(coord)}', headers=headers).json()['CCTVInventoryRequest']
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Cctv/Inventory?Bounds={quote(coord)}', headers)['CCTVInventoryRequest']
       for city, coord in regions.items()
     }
 
     incidents = {
-      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers=headers).json()['incidents']
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers)['incidents']
       for city, coord in regions.items()
     }
   except requests.exceptions.RequestException:
@@ -74,7 +78,7 @@ def get_events():
   }
   try:
     events = {
-      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Tle/Events?Bounds{quote(coord)}', headers=headers).json()['Incidents']
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Tle/Events?Bounds={quote(coord)}', headers)['Incidents']
       for city, coord in regions.items()
     }
 
@@ -82,6 +86,16 @@ def get_events():
     abort(500)
 
   return events
+
+def get_json(url, headers):
+  """Fetch details for coordinates."""
+  resp = requests.get(url, headers=headers)
+  try:
+    resp.raise_for_status()
+  except Exception as e:
+    print(f"Error fetching {url}: {e}")
+    raise e
+  return resp.json()
 
 @app.context_processor
 def utility_processor():
