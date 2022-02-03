@@ -15,12 +15,12 @@ app = Flask(__name__, template_folder='./templates')
 
 clean = re.compile('<.*?>')
 
-APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
-APIKEY_2 = os.getenv('API_KEY_2')
-REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') # Use as environment in compose file
-REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
-HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
-DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
+APIKEY = os.getenv('API_KEY')                                           # Use as environment in compose file
+APIKEY_2 = os.getenv('API_KEY_2')                                       # Use as environment in compose file
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')                            # Use as environment in compose file
+REDIS_HOST = os.getenv('REDIS_HOST', 'redis')                           # Use as environment in compose file
+HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30')) # Use as environment in compose file
+DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))        # Use as environment in compose file
 
 config = {
     "DEBUG": True,
