@@ -7,7 +7,10 @@ services:
     networks:
       - odot-net
     environment:
-      - API_KEY=XXXXXXXXXXXXXXXX
+      - API_KEY=XXXXXXXXXXX
+      - API_KEY_2=XXXXXXXXXXX
+      - DATA_CACHE_TIMEOUT=600
+      - HOMEPAGE_CACHE_TIMEOUT=30
       - REDIS_PASSWORD=password
     depends_on:
       - redis

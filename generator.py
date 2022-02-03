@@ -1,24 +1,32 @@
 import json
 import os
+import re
 from dateutil import parser
 from datetime import datetime
 from urllib.parse import quote
 import requests
 from flask import Flask, render_template, url_for, abort
 from flask_caching import Cache
+from dotenv import load_dotenv
 
-APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
-REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') # Use as environment in compose file
-HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
-DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
+load_dotenv('.env')
 
 app = Flask(__name__, template_folder='./templates')
+
+clean = re.compile('<.*?>')
+
+APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
+APIKEY_2 = os.getenv('API_KEY_2')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') # Use as environment in compose file
+REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
+HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
+DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))
 
 config = {
     "DEBUG": True,
     "CACHE_TYPE": "RedisCache",
     "CACHE_DEFAULT_TIMEOUT": 180,
-    "CACHE_REDIS_HOST": "redis",
+    "CACHE_REDIS_HOST": REDIS_HOST,
     "CACHE_REDIS_PORT": 6379,
     "CACHE_REDIS_PASSWORD": REDIS_PASSWORD
 }
@@ -40,8 +48,9 @@ regions = {
 @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
 def homepage():
   image_urls, incidents = get_data()
+  events = get_events()
   #print(incidents) # For debugging
-  return render_template('index.html', urls=image_urls, incidents=incidents)
+  return render_template('index.html', urls=image_urls, incidents=incidents, events=events)
 
 @cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
@@ -51,12 +60,12 @@ def get_data():
   }
   try:
     image_urls = {
-      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Cctv/Inventory?Bounds={quote(coord)}', headers=headers).json()['CCTVInventoryRequest']
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Cctv/Inventory?Bounds={quote(coord)}', headers)['CCTVInventoryRequest']
       for city, coord in regions.items()
     }
 
     incidents = {
-      city: requests.get(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers=headers).json()['incidents']
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers)['incidents']
       for city, coord in regions.items()
     }
   except requests.exceptions.RequestException:
@@ -64,13 +73,46 @@ def get_data():
 
   return image_urls, incidents
 
+@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='events')
+def get_events():
+  headers = {
+    'Cache-Control': 'no-cache',
+    'Ocp-Apim-Subscription-Key': APIKEY_2
+  }
+  try:
+    events = {
+      city: get_json(f'https://api.odot.state.or.us/tripcheck/Tle/Events?Bounds={quote(coord)}', headers)['Incidents']
+      for city, coord in regions.items()
+    }
+
+  except requests.exceptions.RequestException:
+    abort(500)
+
+  return events
+
+def get_json(url, headers):
+  """Fetch details for coordinates."""
+  resp = requests.get(url, headers=headers)
+  try:
+    resp.raise_for_status()
+  except Exception as e:
+    print(f"Error fetching {url}: {e}")
+    raise e
+  return resp.json()
+
 @app.context_processor
 def utility_processor():
-    def format_time(isotime):
-        dt = parser.parse(isotime)
-        formatted_time = dt.strftime("%m/%d/%Y %H:%M")
-        return formatted_time
-    return dict(format_time=format_time)
+  def format_time(isotime):
+    dt = parser.parse(isotime)
+    formatted_time = dt.strftime("%m/%d/%Y %H:%M")
+    return formatted_time
+  return dict(format_time=format_time)
+
+@app.context_processor
+def tag_processor():
+  def remove_tags(text):
+    return re.sub(clean, '', text)
+  return dict(remove_tags=remove_tags)
 
 @app.route("/ping/")
 def ping():
