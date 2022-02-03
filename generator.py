@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from dateutil import parser
 from datetime import datetime
 from urllib.parse import quote
@@ -12,8 +13,10 @@ load_dotenv('.env')
 
 app = Flask(__name__, template_folder='./templates')
 
+clean = re.compile('<.*?>')
+
 APIKEY = os.getenv('API_KEY')                # Use as environment in compose file
-APIKEY_DEV2 = os.getenv('APIKEY_DEV2')
+APIKEY_2 = os.getenv('API_KEY_2')
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') # Use as environment in compose file
 REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
 HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))
@@ -74,7 +77,7 @@ def get_data():
 def get_events():
   headers = {
     'Cache-Control': 'no-cache',
-    'Ocp-Apim-Subscription-Key': APIKEY_DEV2
+    'Ocp-Apim-Subscription-Key': APIKEY_2
   }
   try:
     events = {
@@ -99,11 +102,17 @@ def get_json(url, headers):
 
 @app.context_processor
 def utility_processor():
-    def format_time(isotime):
-        dt = parser.parse(isotime)
-        formatted_time = dt.strftime("%m/%d/%Y %H:%M")
-        return formatted_time
-    return dict(format_time=format_time)
+  def format_time(isotime):
+    dt = parser.parse(isotime)
+    formatted_time = dt.strftime("%m/%d/%Y %H:%M")
+    return formatted_time
+  return dict(format_time=format_time)
+
+@app.context_processor
+def tag_processor():
+  def remove_tags(text):
+    return re.sub(clean, '', text)
+  return dict(remove_tags=remove_tags)
 
 @app.route("/ping/")
 def ping():

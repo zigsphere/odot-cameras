@@ -70,8 +70,10 @@ h2 + h3 {
 .incidents__incident:nth-child(n + 3) {
   margin-top: calc(var(--spacing) * 4);
 }
-.incidents__headline, .incidents__comments, .incidents__desc, .incidents__update, .incidents__create {
+.incidents__headline, .incidents__comments, .incidents__desc, .incidents__update, .incidents__icon {
   margin-bottom: calc(var(--spacing) * 2);
+}
+.incidents__agency, .incidents__contactname, .incidents__contactemail, .incidents__organization, .incidents__phone {
 }
 .incidents__headline {
   font-size: 1.25em;
@@ -83,6 +85,8 @@ h2 + h3 {
   font-weight: 600;
 }
 .incidents__highway {
+}
+.incidents__create {
 }
 .incidents__mileposts {
 }

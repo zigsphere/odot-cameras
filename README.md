@@ -32,12 +32,25 @@ The application is currently using Redis to store the cache for the retrieved da
 ### Used APIs
 A list of the data that can be retreived is listed [here](https://tripcheck.com/Pages/API); however, currently the [CCTV inventory](https://apiportal.odot.state.or.us/api-details#api=tripcheck-api-v1-0;rev=1&operation=Cls_GetClsInventory) and [incidents](https://apiportal.odot.state.or.us/api-details#api=tripcheck-api-v1-0;rev=1&operation=Inc_GetIncidentsFilter) API are the only two used in this application.
 
+When retreiving API credentials, you will receive two tokens. You will need them both. This application uses multiple keys to avoid the API rate limits due to the amount of data being pulled.
+
+### Environment Variables
+Below are the environment variables that can be set:
+
+    - API_KEY                # First API Key
+    - API_KEY_2              # Second API Key
+    - DATA_CACHE_TIMEOUT     # Cache for the fetched JSON (default is 900 seconds)
+    - HOMEPAGE_CACHE_TIMEOUT # Cache for the rendered output (default is 30 seconds)
+    - REDIS_HOST             # Redis hostname (default is `redis` if using the included container)
+    - REDIS_PASSWORD         # Redis Password (default is `password`)
+
+
 ### Planned Features
 - [ ] Better web frontend
 - [ ] Mult-page site for other cities with more information
 - [ ] Better error handling
 - [x] Use Redis for cache management (Currently using python dictionaries aka SimpleCache)
-- [ ] Add local event information for each city
+- [x] Add local event information for each city
 - [ ] Add road & weather information for each city
  
 ![road](https://github.com/zigsphere/odot-cameras/blob/main/static/road.png?raw=true)
