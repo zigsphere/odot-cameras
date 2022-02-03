@@ -41,8 +41,8 @@ Below are the environment variables that can be set:
     - API_KEY_2              # Second API Key
     - DATA_CACHE_TIMEOUT     # Cache for the fetched JSON (default is 900 seconds)
     - HOMEPAGE_CACHE_TIMEOUT # Cache for the rendered output (default is 30 seconds)
-    - REDIS_HOST             # Redis hostname (default is `redis` if using the included container)
-    - REDIS_PASSWORD         # Redis Password (default is `password`)
+    - REDIS_HOST             # Redis hostname (default is redis if using the included container)
+    - REDIS_PASSWORD         # Redis Password (default is password)
 
 
 ### Planned Features
