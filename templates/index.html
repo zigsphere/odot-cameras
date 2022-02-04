@@ -20,22 +20,24 @@
             {% if incident_city == city %}
               {% if incident %}
                 {% for i in incident %}
-                  <li class="incidents__incident">
-                    <p class="incidents__headline">{{ i["headline"] }}</p>
-                    {% if i["create-time"] -%}
-                    <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
-                    {%- endif %}
-                    {% if i["update-time"] -%}
-                    <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} US/Pacific</p>
-                    {%- endif %}
-                    {% if i["impact-desc"] -%}
-                    <p class="incidents__desc">{{ i["impact-desc"] }}</p>
-                    {%- endif %}
-                    {% if i["comments"] -%}
-                    <p class="incidents__comments">{{ i["comments"] }}</p>
-                    {%- endif %}
-                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
-                  </li>
+                  {% if "No traffic impacts" not in i["headline"] %}
+                    <li class="incidents__incident">
+                      <p class="incidents__headline">{{ i["headline"] }}</p>
+                      {% if i["create-time"] -%}
+                      <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
+                      {%- endif %}
+                      {% if i["update-time"] -%}
+                      <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} US/Pacific</p>
+                      {%- endif %}
+                      {% if i["impact-desc"] -%}
+                      <p class="incidents__desc">{{ i["impact-desc"] }}</p>
+                      {%- endif %}
+                      {% if i["comments"] -%}
+                      <p class="incidents__comments">{{ i["comments"] }}</p>
+                      {%- endif %}
+                      <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
+                    </li>
+                  {% endif %}
                 {% endfor %}
               {% else %}
                 {% set incident_null = true %}
