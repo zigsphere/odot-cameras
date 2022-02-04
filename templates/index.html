@@ -23,6 +23,11 @@
                   {% if "No traffic impacts" not in i["headline"] %}
                     <li class="incidents__incident">
                       <p class="incidents__headline">{{ i["headline"] }}</p>
+                      {% if 'Construction' in i["headline"] or 'construction' in i["headline"] or 'maintenance' in i["headline"] -%}
+                      <p class="incidents__icon"><img src={{url_for('static', filename='construction-64.png')}}></p>
+                      {% elif 'Crash' in i["headline"] or 'crash' in i["headline"] or 'accident' in i["headline"] or 'Accident' in i["headline"] -%}
+                      <p class="incidents__icon"><img src={{url_for('static', filename='car-crash-64.png')}}></p>
+                      {%- endif %}
                       {% if i["create-time"] -%}
                       <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
                       {%- endif %}
@@ -53,6 +58,8 @@
                 <p class="incidents__icon"><img src={{url_for('static', filename='cloud-64.png')}}></p>
                 {% elif 'Hazard' in ent["Type"] -%}
                 <p class="incidents__icon"><img src={{url_for('static', filename='warning-flasher-65.png')}}></p>
+                {% elif 'Construction' in ent["Type"] -%}
+                <p class="incidents__icon"><img src={{url_for('static', filename='construction-64.png')}}></p>
                 {%- endif %}
                 {% if ent["EventStart"] -%}
                 <p class="incidents__create">Start Date: {{ format_time(ent["EventStart"]) }} US/Pacific</p>
