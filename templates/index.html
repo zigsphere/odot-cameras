@@ -15,37 +15,35 @@
       {% for city,cameras in urls.items() %}
       <section class="city">
       <h2>{{ city }}</h2>
-        {% for incident_city,incident in incidents.items() %}
-          {% if incident_city == city %}
-            {% if incident %}
-            <ul class="incidents">
-              {% for i in incident %}
-                <li class="incidents__incident">
-                  <p class="incidents__headline">{{ i["headline"] }}</p>
-                  {% if i["create-time"] -%}
-                  <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
-                  {%- endif %}
-                  {% if i["update-time"] -%}
-                  <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} US/Pacific</p>
-                  {%- endif %}
-                  {% if i["impact-desc"] -%}
-                  <p class="incidents__desc">{{ i["impact-desc"] }}</p>
-                  {%- endif %}
-                  {% if i["comments"] -%}
-                  <p class="incidents__comments">{{ i["comments"] }}</p>
-                  {%- endif %}
-                  <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
-                </li>
-              {% endfor %}
-            </ul>
-            {% else %}
-              {% set incident_null = true %}
-            {% endif %} 
-          {% endif %}
-        {% endfor %}
-        {% set city_events = events.get(city, []) %}
-        {% if city_events | length > 0 %}
-          <ul class="incidents">
+        <ul class="incidents">
+          {% for incident_city,incident in incidents.items() %}
+            {% if incident_city == city %}
+              {% if incident %}
+                {% for i in incident %}
+                  <li class="incidents__incident">
+                    <p class="incidents__headline">{{ i["headline"] }}</p>
+                    {% if i["create-time"] -%}
+                    <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
+                    {%- endif %}
+                    {% if i["update-time"] -%}
+                    <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} US/Pacific</p>
+                    {%- endif %}
+                    {% if i["impact-desc"] -%}
+                    <p class="incidents__desc">{{ i["impact-desc"] }}</p>
+                    {%- endif %}
+                    {% if i["comments"] -%}
+                    <p class="incidents__comments">{{ i["comments"] }}</p>
+                    {%- endif %}
+                    <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
+                  </li>
+                {% endfor %}
+              {% else %}
+                {% set incident_null = true %}
+              {% endif %} 
+           {% endif %}
+          {% endfor %}
+          {% set city_events = events.get(city, []) %}
+          {% if city_events | length > 0 %}
             {% for ent in city_events %}
               <li class="incidents__incident">
                 <p class="incidents__headline">{{ ent["Headline"] }}</p>
@@ -80,7 +78,7 @@
                 {%- endif %}
               </li>
             {% endfor %}
-          </ul>
+        </ul>
         {% else %}
           {% set event_null = true %}
         {% endif %}

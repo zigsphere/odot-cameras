@@ -44,7 +44,6 @@ Below are the environment variables that can be set:
     - REDIS_HOST             # Redis hostname (default is redis if using the included container)
     - REDIS_PASSWORD         # Redis Password (default is password)
 
-
 ### Planned Features
 - [ ] Better web frontend
 - [ ] Mult-page site for other cities with more information
