@@ -50,7 +50,10 @@ def homepage():
   image_urls, incidents = get_data()
   events = get_events()
   #print(incidents) # For debugging
-  return render_template('index.html', urls=image_urls, incidents=incidents, events=events)
+  try:
+    return render_template('index.html', urls=image_urls, incidents=incidents, events=events)
+  except TemplateNotFound:
+    abort(404)
 
 @cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
@@ -118,9 +121,20 @@ def tag_processor():
 def ping():
   return "PONG"
 
+@app.route('/roseburg')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
+def roseburg():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events)
+
 @app.errorhandler(500)
 def page_exception(error):
-    return render_template('500.html'), 500
+  return render_template('500.html'), 500
+
+@app.errorhandler(404)
+def page_not_found_exception(error):
+  return render_template('404.html'), 404
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=False)

@@ -73,6 +73,13 @@ h2 + h3 {
 .incidents__headline, .incidents__comments, .incidents__desc, .incidents__update, .incidents__icon {
   margin-bottom: calc(var(--spacing) * 2);
 }
+.incidents__image {
+  float: left;
+  margin-right: auto;
+  transform: scale(0.75, 0.75);
+  -ms-transform: scale(0.75, 0.75);
+  -webkit-transform: scale(0.75, 0.75);
+}
 .incidents__agency, .incidents__contactname, .incidents__contactemail, .incidents__organization, .incidents__phone {
 }
 .incidents__headline {
