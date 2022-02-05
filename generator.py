@@ -55,6 +55,13 @@ def homepage():
   except TemplateNotFound:
     abort(404)
 
+@app.route('/roseburg')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='rsbg')
+def roseburg():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events)
+
 @cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
   headers = {
@@ -120,13 +127,6 @@ def tag_processor():
 @app.route("/ping/")
 def ping():
   return "PONG"
-
-@app.route('/roseburg')
-@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
-def roseburg():
-  image_urls, incidents = get_data()
-  events = get_events()
-  return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events)
 
 @app.errorhandler(500)
 def page_exception(error):
