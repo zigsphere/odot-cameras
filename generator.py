@@ -56,11 +56,53 @@ def homepage():
     abort(404)
 
 @app.route('/roseburg')
-@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='rsbg')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='rbg')
 def roseburg():
   image_urls, incidents = get_data()
   events = get_events()
   return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events)
+
+@app.route('/eugene')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='eug')
+def eugene():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('eugene.html', urls=image_urls, incidents=incidents, events=events)
+
+@app.route('/klamathfalls')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='lmt')
+def klamathfalls():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('klamathfalls.html', urls=image_urls, incidents=incidents, events=events)
+
+@app.route('/ashland')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='ash')
+def ashland():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('ashland.html', urls=image_urls, incidents=incidents, events=events)
+
+@app.route('/medford')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='mfr')
+def medford():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('medford.html', urls=image_urls, incidents=incidents, events=events)
+
+@app.route('/salem')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='sle')
+def salem():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('salem.html', urls=image_urls, incidents=incidents, events=events)
+
+@app.route('/portland')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='pdx')
+def portland():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('portland.html', urls=image_urls, incidents=incidents, events=events)
 
 @cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
@@ -124,7 +166,7 @@ def tag_processor():
     return re.sub(clean, '', text)
   return dict(remove_tags=remove_tags)
 
-@app.route("/ping/")
+@app.route("/ping")
 def ping():
   return "PONG"
 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ODOT Traffic Cameras</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}" type="image/x-icon" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  </head>
+  <body>
+    <main>
+      {% set incident_null = false %}
+      {% set event_null = false %}
+      <h1>Ashland Traffic Conditions</h1>
+      {% for city,cameras in urls.items() %}
+        {% if "Ashland" in city %}
+        <section class="city">
+        <h2>{{ city }}</h2>
+          <ul class="incidents">
+            {% for incident_city,incident in incidents.items() %}
+              {% if incident_city == city %}
+                {% if incident %}
+                  {% for i in incident %}
+                    {% if "No traffic impacts" not in i["headline"] %}
+                      <li class="incidents__incident">
+                        {% if 'Construction' in i["headline"] or 'construction' in i["headline"] or 'maintenance' in i["headline"] or 'work' in i["headline"] -%}
+                        <p class="incidents__icon"><img class="incidents__image" src={{url_for('static', filename='construction-64.png')}}></p>
+                        {% elif 'Crash' in i["headline"] or 'crash' in i["headline"] or 'accident' in i["headline"] or 'Accident' in i["headline"] -%}
+                        <p class="incidents__icon"><img class="incidents__image" src={{url_for('static', filename='car-crash-64.png')}}></p>
+                        {% elif 'Hazard' in i["headline"] or 'hazard' in i["headline"] -%}
+                        <p class="incidents__icon"><img class="incidents__image" src={{url_for('static', filename='warning-flasher-65.png')}}></p>
+                        {%- endif %}
+                        <p class="incidents__headline">{{ i["headline"] }}</p>
+                        {% if i["create-time"] -%}
+                        <p class="incidents__created">Created: {{ format_time(i["create-time"]) }} US/Pacific</p>
+                        {%- endif %}
+                        {% if i["update-time"] -%}
+                        <p class="incidents__update">Updated: {{ format_time(i["update-time"]) }} US/Pacific</p>
+                        {%- endif %}
+                        {% if i["impact-desc"] -%}
+                        <p class="incidents__desc">{{ i["impact-desc"] }}</p>
+                        {%- endif %}
+                        {% if i["comments"] -%}
+                        <p class="incidents__comments">{{ i["comments"] }}</p>
+                        {%- endif %}
+                        <p class="incidents__metadata"><span class="incidents__highway">{{i["location"]["route-id"] if i["location"]["route-id"] else "Unspecified highway"}}</span>, milepost <span class="incidents__mileposts">{{i["location"]["start-location"]["start-milepost"]}}{% if i["location"]["end-location"]["end-milepost"]%} to {{ i["location"]["end-location"]["end-milepost"] }}{% endif %}</span></p>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  {% set incident_null = true %}
+                {% endif %} 
+            {% endif %}
+            {% endfor %}
+            {% set city_events = events.get(city, []) %}
+            {% if city_events | length > 0 %}
+              {% for ent in city_events %}
+                <li class="incidents__incident">
+                  {% if 'Weather' in ent["Type"] -%}
+                  <p class="incidents__icon"><img class="incidents__image" src={{url_for('static', filename='cloud-64.png')}}></p>
+                  {% elif 'Hazard' in ent["Type"] -%}
+                  <p class="incidents__icon"><img class="incidents__image" src={{url_for('static', filename='warning-flasher-65.png')}}></p>
+                  {% elif 'Construction' in ent["Type"] -%}
+                  <p class="incidents__icon"><img class="incidents__image" src={{url_for('static', filename='construction-64.png')}}></p>
+                  {%- endif %}
+                  <p class="incidents__headline">{{ ent["Headline"] }}</p>
+                  {% if ent["EventStart"] -%}
+                  <p class="incidents__create">Start Date: {{ format_time(ent["EventStart"]) }} US/Pacific</p>
+                  {%- endif %}
+                  {% if ent["EventEnd"] -%}
+                  <p class="incidents__update">End Date: {{ format_time(ent["EventEnd"]) }} US/Pacific</p>
+                  {%- endif %}
+                  {% if ent["Comments"] -%}
+                  <p class="incidents__desc">{{ remove_tags(ent["Comments"]) }}</p>
+                  {%- endif %}
+                  {% if ent["SourceAgency"] -%}
+                  <p class="incidents__agency">{{ ent["SourceAgency"] }}</p>
+                  {%- endif %}
+                  {% if ent["ContactName"] -%}
+                  <p class="incidents__contactname">{{ ent["ContactName"] }}</p>
+                  {%- endif %}
+                  {% if ent["ContactEmail"] -%}
+                  <p class="incidents__contactemail">{{ ent["ContactEmail"] }}</p>
+                  {%- endif %}
+                  {% if ent["ContactOrganization"] -%}
+                  <p class="incidents__organization">{{ ent["ContactOrganization"] }}</p>
+                  {%- endif %}
+                  {% if ent["ContactPhone"] -%}
+                  <p class="incidents__phone">{{ ent["ContactPhone"] }}</p>
+                  {%- endif %}
+                </li>
+              {% endfor %}
+          </ul>
+          {% else %}
+            {% set event_null = true %}
+          {% endif %}
+          {% if event_null == true and incident_null == true %}
+          <p class="incidents--empty">No incidents at this time.</p>
+          {% endif %}
+          <ul class="cameras">
+          {% for camera in cameras %}
+              <li class="cameras__item"><figure class="cameras__figure">
+                  <img class="cameras__image" src="{{camera["cctv-url"]}}" alt="" loading="lazy" width="328" height="295" />
+                  <figcaption class="cameras__caption">{{ camera["cctv-other"]}}</figcaption>
+              </figure></li>
+          {% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+        {% endfor %}
+      <footer>
+        <p class="footer-info">This site is not affiliated with ODOT.</p>
+        <p class="footer-info-2">The images and content above have been retrieved using the ODOT API. This site is not responsible for incorrect data.</p>
+        <p class="footer-heart">
+          Made with <g-emoji class="g-emoji" alias="heart" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2764.png">
+          <img class="emoji" alt="heart" height="20" width="20" src="https://github.githubassets.com/images/icons/emoji/unicode/2764.png"></g-emoji> by <a href="https://www.josephziegler.com">Joseph Ziegler</a>
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
