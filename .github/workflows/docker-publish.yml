@@ -25,7 +25,7 @@ env:
 jobs:
   build:
     #runs-on: ubuntu-latest
-    runs-on: zigrunner
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -95,7 +95,7 @@ jobs:
     name: cd
     if: github.ref == 'refs/heads/main'
     #runs-on: ubuntu-latest
-    runs-on: zigrunner
+    runs-on: self-hosted
     needs: build
     steps:
     - name: executing remote ssh commands using password
@@ -112,7 +112,7 @@ jobs:
     name: cd
     if: github.ref == 'refs/heads/development'
     #runs-on: ubuntu-latest
-    runs-on: zigrunner
+    runs-on: self-hosted
     needs: build
     steps:
     - name: executing remote ssh commands using password
