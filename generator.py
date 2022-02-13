@@ -4,6 +4,7 @@ import re
 from dateutil import parser
 from datetime import datetime
 from urllib.parse import quote
+from jinja2 import TemplateNotFound
 import requests
 from flask import Flask, render_template, url_for, abort
 from flask_caching import Cache
