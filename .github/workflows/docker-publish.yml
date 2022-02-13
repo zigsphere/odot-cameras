@@ -24,8 +24,8 @@ env:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -94,7 +94,8 @@ jobs:
   continuous_deployment_main:
     name: cd
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
     - name: executing remote ssh commands using password
@@ -110,7 +111,8 @@ jobs:
   continuous_deployment_dev:
     name: cd
     if: github.ref == 'refs/heads/development'
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
     - name: executing remote ssh commands using password
