@@ -10,18 +10,25 @@ from flask import Flask, render_template, url_for, abort
 from flask_caching import Cache
 from dotenv import load_dotenv
 
+# Scheduler for autoloading page for cache purposes
+import time
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+
 load_dotenv('.env')
 
 app = Flask(__name__, template_folder='./templates')
 
 clean = re.compile('<.*?>')
 
-APIKEY = os.getenv('API_KEY')                                           # Use as environment in compose file
-APIKEY_2 = os.getenv('API_KEY_2')                                       # Use as environment in compose file
-REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')                            # Use as environment in compose file
-REDIS_HOST = os.getenv('REDIS_HOST', 'redis')                           # Use as environment in compose file
+APIKEY                 = os.getenv('API_KEY')                           # Use as environment in compose file
+APIKEY_2               = os.getenv('API_KEY_2')                         # Use as environment in compose file
+REDIS_PASSWORD         = os.getenv('REDIS_PASSWORD')                    # Use as environment in compose file
+REDIS_HOST             = os.getenv('REDIS_HOST', 'redis')               # Use as environment in compose file
 HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30')) # Use as environment in compose file
-DATA_CACHE_TIMEOUT = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))        # Use as environment in compose file
+DATA_CACHE_TIMEOUT     = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))    # Use as environment in compose file
+LOAD_TIMEOUT           = int(15)                                        # Seconds
+RELOAD_REFRESH         = DATA_CACHE_TIMEOUT - LOAD_TIMEOUT
 
 config = {
     "DEBUG": True,
@@ -44,6 +51,12 @@ regions = {
   'Salem / Surrounding Area': '-123.153519,44.819314,-122.649742,45.284286',
   'Portland': '-122.846803,45.312897,-122.378803,45.568083'
 }
+ 
+# Function for scheduler to reload pages seconds before the timeout expires
+def reload_pages():
+  requests.get('http://odot:5000/', timeout=LOAD_TIMEOUT)
+  requests.get('http://odot:5000/roseburg', timeout=LOAD_TIMEOUT)
+  requests.get('http://odot:5000/klamath', timeout=LOAD_TIMEOUT)
 
 @app.route('/')
 @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
@@ -55,6 +68,13 @@ def homepage():
     return render_template('index.html', urls=image_urls, incidents=incidents, events=events)
   except TemplateNotFound:
     abort(404)
+
+@app.route('/klamath')
+@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='kfalls')
+def klamath():
+  image_urls, incidents = get_data()
+  events = get_events()
+  return render_template('klamath.html', urls=image_urls, incidents=incidents, events=events)
 
 @app.route('/roseburg')
 @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='rsbg')
@@ -136,6 +156,15 @@ def page_exception(error):
 @app.errorhandler(404)
 def page_not_found_exception(error):
   return render_template('404.html'), 404
+
+
+# Scheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=reload_pages, trigger="interval", seconds=RELOAD_REFRESH)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=False)

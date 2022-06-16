@@ -5,3 +5,4 @@ Flask-Caching
 redis
 python-dateutil
 python-dotenv
+apscheduler
