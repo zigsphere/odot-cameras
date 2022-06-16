@@ -46,7 +46,7 @@ Below are the environment variables that can be set:
 
 ### Planned Features
 - [ ] Better web frontend
-- [ ] Mult-page site for other cities with more information
+- [ ] Multi-page site for other cities with more information
 - [ ] Better error handling
 - [x] Use Redis for cache management (Currently using python dictionaries aka SimpleCache)
 - [x] Add local event information for each city
