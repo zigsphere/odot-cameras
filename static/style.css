@@ -97,6 +97,8 @@ h2 + h3 {
 }
 .incidents__mileposts {
 }
+.weather {
+}
 .incidents--empty {
   font-size: 1.2em;
   margin-top: calc(2 * var(--spacing));
