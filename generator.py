@@ -23,6 +23,7 @@ clean = re.compile('<.*?>')
 
 APIKEY                 = os.getenv('API_KEY')                           # Use as environment in compose file
 APIKEY_2               = os.getenv('API_KEY_2')                         # Use as environment in compose file
+WEATHER_API_KEY        = os.getenv('WEATHER_API_KEY')                   # Use as environment in compose file https://www.weatherapi.com/
 REDIS_PASSWORD         = os.getenv('REDIS_PASSWORD')                    # Use as environment in compose file
 REDIS_HOST             = os.getenv('REDIS_HOST', 'redis')               # Use as environment in compose file
 HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30')) # Use as environment in compose file
@@ -51,6 +52,16 @@ regions = {
   'Salem / Surrounding Area': '-123.153519,44.819314,-122.649742,45.284286',
   'Portland': '-122.846803,45.312897,-122.378803,45.568083'
 }
+
+zipcodes = {
+  'Roseburg': '97470',
+  'Klamath Falls': '97601',
+  'Ashland': '97520',
+  'Medford': '97501',
+  'Eugene': '97401',
+  'Salem': '97301',
+  'Portland': '97035'
+}
  
 # Function for scheduler to reload pages seconds before the timeout expires
 def reload_pages():
@@ -63,9 +74,10 @@ def reload_pages():
 def homepage():
   image_urls, incidents = get_data()
   events = get_events()
-  #print(incidents) # For debugging
+  weather = get_weather()
+  # print(weather) # For debugging
   try:
-    return render_template('index.html', urls=image_urls, incidents=incidents, events=events)
+    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather)
   except TemplateNotFound:
     abort(404)
 
@@ -120,6 +132,22 @@ def get_events():
     abort(500)
 
   return events
+
+@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='weather')
+def get_weather():
+  headers = {
+    'Cache-Control': 'no-cache',
+  }
+  try:
+    weather = { 
+      city: get_json(f'https://api.weatherapi.com/v1/current.json?key={quote(WEATHER_API_KEY)}&q={quote(zip)}&aqi=no', headers)['current']
+      for city, zip in zipcodes.items()
+    }
+
+  except requests.exceptions.RequestException:
+    abort(500)
+
+  return weather
 
 def get_json(url, headers):
   """Fetch details for coordinates."""

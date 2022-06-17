@@ -9,6 +9,7 @@ services:
     environment:
       - API_KEY=XXXXXXXXXX
       - API_KEY_2=XXXXXXXXXX
+      - WEATHER_API_KEY=XXXXXXXXXX
       - DATA_CACHE_TIMEOUT=600
       - HOMEPAGE_CACHE_TIMEOUT=30
       - REDIS_PASSWORD=password
