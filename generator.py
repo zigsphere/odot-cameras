@@ -109,6 +109,12 @@ def get_data():
       for city, coord in regions.items()
     }
 
+    for cameras in image_urls.values():
+      for camera in cameras:
+        cctv_url = camera["cctv-url"]
+        if cctv_url.startswith("http://"):
+          camera["cctv-url"] = cctv_url.replace("http:", "https:", 1)
+
     incidents = {
       city: get_json(f'https://api.odot.state.or.us/tripcheck/Incidents?Bounds={quote(coord)}', headers)['incidents']
       for city, coord in regions.items()

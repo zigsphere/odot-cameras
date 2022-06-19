@@ -168,3 +168,5 @@ footer {
   text-align:center;
   font-family: open sans, sans-serif;
 }
+
+summary:hover { cursor: pointer; }
