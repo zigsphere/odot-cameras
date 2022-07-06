@@ -106,11 +106,16 @@ h2 + h3, details {
 .cameras {
   /* using Grid to avoid layout problems with the last line, but if that’s not an issue, Flexbox will do the job */
   display: grid;
-  grid-template-columns: repeat(4, calc(25% - var(--spacing) * 2));
+  grid-template-columns: repeat(2, calc(50% - var(--spacing) * 2)); /* CHANGED TO 2 */
   grid-gap: calc(var(--spacing) * 2);
   margin: calc(4 * var(--spacing)) auto 0;
   list-style: none;
   justify-content: space-between;
+}
+@media (min-width: 800px) { /* change this to whatever you want to set the threshold to */
+  .cameras {
+    grid-template-columns: repeat(4, calc(25% - var(--spacing) * 2));
+  }
 }
 .cameras__item {
 }
