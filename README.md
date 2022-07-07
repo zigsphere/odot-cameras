@@ -15,7 +15,7 @@ Using the Oregon Department of Transportation (ODOT) CCTV API to generate a site
 
 This is an experimental Flask web application that pulls from the ODOT API. The site shows various cities with the surrounding traffic cameras and incident information.
 
-Site is live at: https://odotcams.josephziegler.dev
+Site is live at: https://www.camsoregon.com/
 
 ### To Run
 In the docker-compose.yml file, set the API_KEY environment variable to your own API key. You can get one from https://apiportal.odot.state.or.us/product#product=tripcheck-api-data. Once set:
