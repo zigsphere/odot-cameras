@@ -54,7 +54,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
         secrets: |
-          "BUILD_ID"=${{ github.run_id }}
+          "BUILD_ID=${{ github.run_id }}"
   continuous_deployment_main:
     name: cd
     if: github.ref == 'refs/heads/main'
