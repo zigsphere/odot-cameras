@@ -49,8 +49,9 @@ h3 {
 h2 + h3, details {
   margin-top: calc(var(--spacing) * 3);
 }
-small {
-  color:lightslategray
+.build p{
+  color:lightslategray;
+  text-align: right;
 }
 .incidents {
   display: flex;

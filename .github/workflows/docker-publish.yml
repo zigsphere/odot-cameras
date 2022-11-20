@@ -70,7 +70,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         script: |
           cd /opt/odot-cameras/odot-cameras
-          docker-compose down && docker-compose pull && BUILD_ID=${{ github.run_id }} RUN_NUMBER=${{ github.run_number }} docker-compose up -d
+          docker-compose pull && docker-compose down && BUILD_ID=${{ github.run_id }} RUN_NUMBER=${{ github.run_number }} docker-compose up -d
   continuous_deployment_dev:
     name: cd
     if: github.ref == 'refs/heads/development'
@@ -86,4 +86,4 @@ jobs:
         username: ${{ secrets.DEV_USERNAME }}
         script: |
           cd /opt/odot-cameras/odot-cameras
-          docker-compose down && docker-compose pull && docker-compose up -d
+          docker-compose pull && docker-compose down && BUILD_ID=${{ github.run_id }} RUN_NUMBER=${{ github.run_number }} docker-compose up -d
