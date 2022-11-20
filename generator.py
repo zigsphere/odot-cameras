@@ -21,15 +21,16 @@ app = Flask(__name__, template_folder='./templates')
 
 clean = re.compile('<.*?>')
 
-APIKEY                 = os.getenv('API_KEY')                           # Use as environment in compose file
-APIKEY_2               = os.getenv('API_KEY_2')                         # Use as environment in compose file
-WEATHER_API_KEY        = os.getenv('WEATHER_API_KEY')                   # Use as environment in compose file https://www.weatherapi.com/
-REDIS_PASSWORD         = os.getenv('REDIS_PASSWORD')                    # Use as environment in compose file
-REDIS_HOST             = os.getenv('REDIS_HOST', 'redis')               # Use as environment in compose file
-HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30')) # Use as environment in compose file
-DATA_CACHE_TIMEOUT     = int(os.getenv('DATA_CACHE_TIMEOUT', '900'))    # Use as environment in compose file
-LOAD_TIMEOUT           = int(15)                                        # Seconds
-RELOAD_REFRESH         = DATA_CACHE_TIMEOUT - LOAD_TIMEOUT
+APIKEY                 = os.getenv('API_KEY')                            # Use as environment in compose file
+APIKEY_2               = os.getenv('API_KEY_2')                          # Use as environment in compose file
+WEATHER_API_KEY        = os.getenv('WEATHER_API_KEY')                    # Use as environment in compose file https://www.weatherapi.com/
+REDIS_PASSWORD         = os.getenv('REDIS_PASSWORD')                     # Use as environment in compose file
+REDIS_HOST             = os.getenv('REDIS_HOST', 'redis')                # Use as environment in compose file
+HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))  # Use as environment in compose file
+CCTV_CACHE_TIMEOUT     = int(os.getenv('CCTV_CACHE_TIMEOUT', '86400'))   # Use as environment in compose file
+INCIDENT_CACHE_TIMEOUT = int(os.getenv('INCIDENT_CACHE_TIMEOUT', '900')) # Use as environment in compose file
+LOAD_TIMEOUT           = int(15)                                         # Seconds
+RELOAD_REFRESH         = INCIDENT_CACHE_TIMEOUT - LOAD_TIMEOUT           # Incident information is updated most often, so lean on this for the refresh frequency
 
 config = {
     "DEBUG": True,
@@ -45,6 +46,7 @@ cache = Cache(app)
 
 regions = {
   'Roseburg': '-123.813436,42.798917,-123.143353,43.447403',
+  #'Diamond Lake': '-122.2503,43.0608,-121.9248,43.1820',
   'Klamath Falls': '-122.553828,42.140986,-121.602086,42.457756',
   'Ashland / Siskiyou': '-122.819803,42.009244,-122.520011,42.320272',
   'Medford / Central Point': '-123.006094,42.179417,-122.776114,42.508094',
@@ -55,6 +57,7 @@ regions = {
 
 zipcodes = {
   'Roseburg': '97470',
+  #'Diamond Lake': '97731',
   'Klamath Falls': '97601',
   'Ashland': '97520',
   'Medford': '97501',
@@ -66,8 +69,8 @@ zipcodes = {
 # Function for scheduler to reload pages seconds before the timeout expires
 def reload_pages():
   requests.get('http://odot:5000/', timeout=LOAD_TIMEOUT)
-  requests.get('http://odot:5000/roseburg', timeout=LOAD_TIMEOUT)
-  requests.get('http://odot:5000/klamath', timeout=LOAD_TIMEOUT)
+  #requests.get('http://odot:5000/roseburg', timeout=LOAD_TIMEOUT)
+  #requests.get('http://odot:5000/klamath', timeout=LOAD_TIMEOUT)
 
 @app.route('/')
 @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT)
@@ -97,7 +100,7 @@ def roseburg():
   weather = get_weather()
   return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events, weather=weather)
 
-@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='data')
+@cache.cached(timeout=CCTV_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
   headers = {
     'Cache-Control': 'no-cache',
@@ -124,7 +127,7 @@ def get_data():
 
   return image_urls, incidents
 
-@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='events')
+@cache.cached(timeout=INCIDENT_CACHE_TIMEOUT, key_prefix='events')
 def get_events():
   headers = {
     'Cache-Control': 'no-cache',
@@ -141,7 +144,7 @@ def get_events():
 
   return events
 
-@cache.cached(timeout=DATA_CACHE_TIMEOUT, key_prefix='weather')
+@cache.cached(timeout=INCIDENT_CACHE_TIMEOUT, key_prefix='weather')
 def get_weather():
   headers = {
     'Cache-Control': 'no-cache',
