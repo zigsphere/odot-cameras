@@ -53,6 +53,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+        secrets: |
+          "BUILD_ID"=${{ github.run_id }}
   continuous_deployment_main:
     name: cd
     if: github.ref == 'refs/heads/main'
@@ -69,7 +71,6 @@ jobs:
         script: |
           cd /opt/odot-cameras/odot-cameras
           docker-compose down && docker-compose pull && docker-compose up -d
-          echo ${{ github.run_id }} > /opt/odot-cameras/odot-cameras/build_id
   continuous_deployment_dev:
     name: cd
     if: github.ref == 'refs/heads/development'
