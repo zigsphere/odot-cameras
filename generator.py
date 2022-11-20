@@ -82,7 +82,7 @@ def homepage():
   weather = get_weather()
   # print(weather) # For debugging
   try:
-    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather, BUILD_ID=BUILD_ID)
+    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather, BUILD_ID=BUILD_ID, RUN_NUMBER=RUN_NUMBER)
   except TemplateNotFound:
     abort(404)
 
