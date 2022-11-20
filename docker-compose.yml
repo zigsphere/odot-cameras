@@ -14,6 +14,7 @@ services:
       - INCIDENT_CACHE_TIMEOUT=900
       - HOMEPAGE_CACHE_TIMEOUT=30
       - REDIS_PASSWORD=password
+      - BUILD_ID=${BUILD_ID}
     depends_on:
       - redis
   web:

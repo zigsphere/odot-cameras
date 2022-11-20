@@ -26,6 +26,7 @@ APIKEY_2               = os.getenv('API_KEY_2')                          # Use a
 WEATHER_API_KEY        = os.getenv('WEATHER_API_KEY')                    # Use as environment in compose file https://www.weatherapi.com/
 REDIS_PASSWORD         = os.getenv('REDIS_PASSWORD')                     # Use as environment in compose file
 REDIS_HOST             = os.getenv('REDIS_HOST', 'redis')                # Use as environment in compose file
+BUILD_ID               = os.getenv('BUILD_ID', '0')                      # Set by the github workflow and docker-compose file
 HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))  # Use as environment in compose file
 CCTV_CACHE_TIMEOUT     = int(os.getenv('CCTV_CACHE_TIMEOUT', '86400'))   # Use as environment in compose file
 INCIDENT_CACHE_TIMEOUT = int(os.getenv('INCIDENT_CACHE_TIMEOUT', '900')) # Use as environment in compose file
@@ -80,7 +81,7 @@ def homepage():
   weather = get_weather()
   # print(weather) # For debugging
   try:
-    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather)
+    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather, BUILD_ID=BUILD_ID)
   except TemplateNotFound:
     abort(404)
 
