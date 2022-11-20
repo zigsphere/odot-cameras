@@ -50,7 +50,7 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
@@ -70,7 +70,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         script: |
           cd /opt/odot-cameras/odot-cameras
-          docker-compose down && docker-compose pull && docker-compose up -d
+          docker-compose down && docker-compose pull && BUILD_ID=${{ github.run_id }} docker-compose up -d
   continuous_deployment_dev:
     name: cd
     if: github.ref == 'refs/heads/development'
