@@ -69,10 +69,10 @@ jobs:
         script: |
           cd /opt/odot-cameras/odot-cameras
           docker-compose down && docker-compose pull && docker-compose up -d
+          echo ${{ github.run_id }} > /opt/odot-cameras/odot-cameras/build_id
   continuous_deployment_dev:
     name: cd
     if: github.ref == 'refs/heads/development'
-    #runs-on: ubuntu-latest
     runs-on: ubuntu-latest
     needs: build-and-push-image
     steps:
