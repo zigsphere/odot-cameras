@@ -32,7 +32,7 @@ HOMEPAGE_CACHE_TIMEOUT = int(os.getenv('HOMEPAGE_CACHE_TIMEOUT', '30'))  # Use a
 CCTV_CACHE_TIMEOUT     = int(os.getenv('CCTV_CACHE_TIMEOUT', '86400'))   # Use as environment in compose file
 INCIDENT_CACHE_TIMEOUT = int(os.getenv('INCIDENT_CACHE_TIMEOUT', '900')) # Use as environment in compose file
 LOAD_TIMEOUT           = int(15)                                         # Seconds
-RELOAD_REFRESH         = INCIDENT_CACHE_TIMEOUT - LOAD_TIMEOUT           # Incident information is updated most often, so lean on this for the refresh frequency
+RELOAD_REFRESH         = int(30)                                         # Load page automatically every x seconds
 
 config = {
     "DEBUG": True,
