@@ -18,8 +18,8 @@
   </head>
   <body>
     <main>
-      {% set incident_null = false %}
-      {% set event_null = false %}
+      {% set incident_null = true %}
+      {% set event_null = true %}
       <h1>Oregon Traffic Conditions</h1>
       {% for city,cameras in urls.items() %}
       <section class="city">
@@ -36,6 +36,7 @@
             {% for incident_city,incident in incidents.items() %}
               {% if incident_city == city %}
                 {% if incident %}
+                  {% set incident_null = false %}
                   {% for i in incident %}
                     {% if "No traffic impacts" not in i["headline"] %}
                       <li class="incidents__incident">
@@ -63,14 +64,12 @@
                       </li>
                     {% endif %}
                   {% endfor %}
-                {% else %}
-                  {% set incident_null = true %}
-                  <p class="incidents--empty">No incidents at this time.</p>
                 {% endif %} 
             {% endif %}
             {% endfor %}
             {% set city_events = events.get(city, []) %}
             {% if city_events | length > 0 %}
+              {% set event_null = false %}
               {% for ent in city_events %}
                 <li class="incidents__incident">
                   {% if 'Weather' in ent["Type"] -%}
@@ -107,8 +106,6 @@
                   {%- endif %}
                 </li>
               {% endfor %}
-            {% else %}
-              {% set event_null = true %}
             {% endif %}
             {% if event_null == true and incident_null == true %}
             <p class="incidents--empty">No incidents at this time.</p>
