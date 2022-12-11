@@ -18,10 +18,8 @@
   </head>
   <body>
     <main>
-      
       <h1>Oregon Traffic Conditions</h1>
       {% for city,cameras in urls.items() %}
-
       <section class="city">
       <h2>{{ city }}</h2>
       {% for weather_city,climate in weather.items() %}
@@ -68,7 +66,7 @@
                   {% if not city_events | length > 0 %}
                     <p class="incidents--empty">No incidents at this time.</p>
                   {% endif %}
-                {% endif %} 
+                {% endif %}
               {% endif %}
             {% endfor %}
             {% set city_events = events.get(city, []) %}
