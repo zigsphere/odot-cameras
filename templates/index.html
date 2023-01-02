@@ -110,6 +110,14 @@
             {% endif %}
           </ul>
         </details>
+        <details>
+          <summary>Click for Local Police/Fire Scanner Broadcasts</summary>
+          {% for broadcast_city,broadcast_id in broadcast_id %}
+            {% if broadcast_city == city %}
+              <iframe width="325px" height="245px" src="https://api.broadcastify.com/embed/player/?key={{ BROADCASTIFY_KEY }}&html5=1&feedId={{ broadcast_id }}&stats=1&bg=000000&fg=FFFFFF">Your browser does not support iFrames.</iframe>
+            {% endif %}
+          {% endfor %}
+        </details>
         <ul class="cameras">
         {% for camera in cameras %}
             <li class="cameras__item"><figure class="cameras__figure">

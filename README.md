@@ -41,6 +41,7 @@ Below are the environment variables that can be set:
 
     - API_KEY                 # First API Key
     - API_KEY_2               # Second API Key
+    - BROADCASTIFY_KEY        # API key to embed Broadcastify iframes on the main site
     - WEATHER_API_KEY         # API key to fetch weather data https://www.weatherapi.com/
     - CCTV_CACHE_TIMEOUT      # Cache for the fetched JSON of the CCTV camera inventory (default is 86400 seconds (24 hours))
     - INCIDENT_CACHE_TIMEOUT  # Cache for the fetched JSON of the incident inventory (default is 900 seconds)

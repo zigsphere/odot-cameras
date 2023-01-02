@@ -61,6 +61,14 @@ h2 + h3, details {
   margin: 0 auto;
   align-items: flex-start;
 }
+.broadcasts {
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+  justify-content: space-between;
+  margin: 0 auto;
+  align-items: flex-start;
+}
 .incidents__incident {
   --gap: calc(var(--spacing) * 1);
   width: calc(100% / 2 - 1 * var(--gap));

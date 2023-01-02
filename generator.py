@@ -23,6 +23,7 @@ clean = re.compile('<.*?>')
 
 APIKEY                 = os.getenv('API_KEY')                            # Use as environment in compose file
 APIKEY_2               = os.getenv('API_KEY_2')                          # Use as environment in compose file
+BROADCASTIFY_KEY       = os.getenv('BROADCASTIFY_KEY')                 # Use as environment in compose file https://www.radioreference.com/account/api
 WEATHER_API_KEY        = os.getenv('WEATHER_API_KEY')                    # Use as environment in compose file https://www.weatherapi.com/
 REDIS_PASSWORD         = os.getenv('REDIS_PASSWORD')                     # Use as environment in compose file
 REDIS_HOST             = os.getenv('REDIS_HOST', 'redis')                # Use as environment in compose file
@@ -67,6 +68,16 @@ zipcodes = {
   'Salem': '97301',
   'Portland': '97035'
 }
+
+broadcast_ids = {
+  'Roseburg': '19114', # https://www.broadcastify.com/listen/ctid/2214
+  'Klamath Falls': '23474', # https://www.broadcastify.com/listen/ctid/2222
+  'Ashland / Siskiyou': '7238', # https://www.broadcastify.com/listen/ctid/2219
+  'Medford / Central Point': '7238', # https://www.broadcastify.com/listen/ctid/2219
+  'Eugene': '31041', # https://www.broadcastify.com/listen/ctid/2224
+  'Salem / Surrounding Area': '20083', # https://www.broadcastify.com/listen/ctid/2228
+  'Portland': '20766' # https://www.broadcastify.com/listen/ctid/2230
+}
  
 # Function for scheduler to reload pages seconds before the timeout expires
 def reload_pages():
@@ -80,27 +91,30 @@ def homepage():
   image_urls, incidents = get_data()
   events = get_events()
   weather = get_weather()
+  broadcast_id = get_broadcast()
   # print(weather) # For debugging
   try:
-    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather, BUILD_ID=BUILD_ID, RUN_NUMBER=RUN_NUMBER)
+    return render_template('index.html', urls=image_urls, incidents=incidents, events=events, weather=weather, broadcast_id=broadcast_id, BUILD_ID=BUILD_ID, RUN_NUMBER=RUN_NUMBER, BROADCASTIFY_KEY=BROADCASTIFY_KEY)
   except TemplateNotFound:
     abort(404)
 
-@app.route('/klamath')
-@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='kfalls')
-def klamath():
-  image_urls, incidents = get_data()
-  events = get_events()
-  weather = get_weather()
-  return render_template('klamath.html', urls=image_urls, incidents=incidents, events=events, weather=weather)
+# @app.route('/klamath')
+# @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='kfalls')
+# def klamath():
+#   image_urls, incidents = get_data()
+#   events = get_events()
+#   weather = get_weather()
+#   broadcast_link = get_broadcast()
+#   return render_template('klamath.html', urls=image_urls, incidents=incidents, events=events, weather=weather, broadcast_link=broadcast_link)
 
-@app.route('/roseburg')
-@cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='rsbg')
-def roseburg():
-  image_urls, incidents = get_data()
-  events = get_events()
-  weather = get_weather()
-  return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events, weather=weather)
+# @app.route('/roseburg')
+# @cache.cached(timeout=HOMEPAGE_CACHE_TIMEOUT, key_prefix='rsbg')
+# def roseburg():
+#   image_urls, incidents = get_data()
+#   events = get_events()
+#   weather = get_weather()
+#   broadcast_link = get_broadcast()
+#   return render_template('roseburg.html', urls=image_urls, incidents=incidents, events=events, weather=weather, broadcast_link=broadcast_link)
 
 @cache.cached(timeout=CCTV_CACHE_TIMEOUT, key_prefix='data')
 def get_data():
@@ -161,6 +175,9 @@ def get_weather():
     abort(500)
 
   return weather
+
+def get_broadcast():
+  return [(broadcast_city, broadcast_id) for broadcast_city, broadcast_id in broadcast_ids.items()]
 
 def get_json(url, headers):
   """Fetch details for coordinates."""
