@@ -70,7 +70,7 @@ zipcodes = {
 }
 
 broadcast_ids = {
-  'Roseburg': '19114', # https://www.broadcastify.com/listen/ctid/2214
+  'Roseburg': '40833', # https://www.broadcastify.com/listen/ctid/2214
   'Klamath Falls': '23474', # https://www.broadcastify.com/listen/ctid/2222
   'Ashland / Siskiyou': '7238', # https://www.broadcastify.com/listen/ctid/2219
   'Medford / Central Point': '7238', # https://www.broadcastify.com/listen/ctid/2219
