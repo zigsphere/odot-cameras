@@ -49,7 +49,8 @@ cache = Cache(app)
 
 regions = {
   'Roseburg': '-123.813436,42.798917,-123.143353,43.447403',
-  #'Diamond Lake': '-122.2503,43.0608,-121.9248,43.1820',
+  #'Cottage Grove': '-123.3668,43.5011,-122.9980,44.0317',
+  #'Diamond Lake': '-122.1493,43.1059,-122.0766,43.1590',
   'Klamath Falls': '-122.553828,42.140986,-121.602086,42.457756',
   'Ashland / Siskiyou': '-122.819803,42.009244,-122.520011,42.320272',
   'Medford / Central Point': '-123.006094,42.179417,-122.776114,42.508094',
@@ -60,6 +61,7 @@ regions = {
 
 zipcodes = {
   'Roseburg': '97470',
+  #'Cottage Grove': '97424',
   #'Diamond Lake': '97731',
   'Klamath Falls': '97601',
   'Ashland': '97520',
@@ -71,6 +73,8 @@ zipcodes = {
 
 broadcast_ids = {
   'Roseburg': '40833', # https://www.broadcastify.com/listen/ctid/2214
+  #'Cottage Grove': '31041', #https://www.broadcastify.com/listen/feed/31041
+  #'Diamond Lake': '40833', # https://www.broadcastify.com/listen/ctid/2214'
   'Klamath Falls': '23474', # https://www.broadcastify.com/listen/ctid/2222
   'Ashland / Siskiyou': '7238', # https://www.broadcastify.com/listen/ctid/2219
   'Medford / Central Point': '7238', # https://www.broadcastify.com/listen/ctid/2219
@@ -181,7 +185,7 @@ def get_broadcast():
 
 def get_json(url, headers):
   """Fetch details for coordinates."""
-  resp = requests.get(url, headers=headers)
+  resp = requests.get(url, headers=headers, verify=False)
   try:
     resp.raise_for_status()
   except Exception as e:
