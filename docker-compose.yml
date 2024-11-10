@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   odot:
     image: ghcr.io/zigsphere/odot-cameras:main
