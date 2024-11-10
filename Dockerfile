@@ -4,7 +4,7 @@ LABEL Joseph Ziegler "joseph@josephziegler.com"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    build-essential python3-dev supervisor apt-utils && \
+    build-essential python3-dev apt-utils && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/venv
@@ -24,18 +24,15 @@ RUN pip install --upgrade pip && \
 FROM python:3.9.10-slim-buster as running-image
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    supervisor && \
+    apt-get install -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /opt/app
 COPY . .
 COPY --from=compile-image /opt/venv ./venv
 RUN useradd appuser
 RUN chown -R appuser /opt/app
-COPY supervisord.conf /etc/
-RUN chmod 0644 /etc/supervisord.conf
 
 USER appuser
 ENV PATH="/opt/app/venv/bin:$PATH"
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/opt/app/venv/bin/uwsgi", "--ini", "/opt/app/uwsgi.ini", "--die-on-term" ]
